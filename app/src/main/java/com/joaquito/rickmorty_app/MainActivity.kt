@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.joaquito.rickmorty_app.DetailActivity.Companion.EXTRA_ID
 import com.joaquito.rickmorty_app.adapterAll.CharactersAdapter
@@ -65,12 +66,12 @@ class MainActivity : AppCompatActivity() {
 
         adapter = CharactersAdapter{ characterId -> navigateToDetail(characterId) }
         binding.rvAll.setHasFixedSize(true)
-        binding.rvAll.layoutManager = LinearLayoutManager(this)
+        binding.rvAll.layoutManager = GridLayoutManager(this, 2)
         binding.rvAll.adapter = adapter
 
-        filteredAdapter = FilteredAdapter()
+        filteredAdapter = FilteredAdapter{ characterId -> navigateToDetail(characterId) }
         binding.rvFiltered.setHasFixedSize(true)
-        binding.rvFiltered.layoutManager = LinearLayoutManager(this)
+        binding.rvFiltered.layoutManager = GridLayoutManager(this, 2)
         binding.rvFiltered.adapter = filteredAdapter
 
 
@@ -83,9 +84,13 @@ class MainActivity : AppCompatActivity() {
                 val response: CharactersModel? = myResponse.body()
                 if (response != null){
                     runOnUiThread {
+                        binding.ivBack.isVisible = true
                         binding.rvAll.isVisible = false
                         binding.rvFiltered.isVisible = true
                         filteredAdapter.updateList(response.characterInfo)
+                        if (binding.rvFiltered.isVisible && !binding.rvAll.isVisible){
+                            goBack()
+                        }
                     }
                 }
             }
@@ -103,6 +108,15 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra(EXTRA_ID, id)
         startActivity(intent)
+    }
+
+    private fun goBack(){
+        binding.ivBack.setOnClickListener {
+            binding.rvAll.isVisible = true
+            binding.rvFiltered.isVisible = false
+            binding.ivBack.isVisible = false
+        }
+
     }
 }
 

@@ -6,7 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.joaquito.rickmorty_app.CharacterItemModel
 import com.joaquito.rickmorty_app.R
 
-class FilteredAdapter (private var characterList: List<CharacterItemModel> = emptyList()): RecyclerView.Adapter<FilteredViewHolder>() {
+class FilteredAdapter (
+    private var characterList: List<CharacterItemModel> = emptyList(),
+    private val onItemSelected: (Int) -> Unit
+): RecyclerView.Adapter<FilteredViewHolder>() {
 
     fun updateList(characterList: List<CharacterItemModel>){
         this.characterList = characterList
@@ -19,7 +22,7 @@ class FilteredAdapter (private var characterList: List<CharacterItemModel> = emp
     }
 
     override fun onBindViewHolder(holder: FilteredViewHolder, position: Int) {
-        holder.bind(characterList[position])
+        holder.bind(characterList[position], onItemSelected)
     }
 
     override fun getItemCount(): Int {

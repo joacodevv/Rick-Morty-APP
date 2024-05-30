@@ -12,6 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 
+@Suppress("DEPRECATION")
 class DetailActivity : AppCompatActivity() {
 
     companion object{
@@ -28,6 +29,7 @@ class DetailActivity : AppCompatActivity() {
         getCharacterInfo(id)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        goBack()
     }
 
     private fun getCharacterInfo(id: Int) {
@@ -59,5 +61,11 @@ class DetailActivity : AppCompatActivity() {
             .baseUrl("https://rickandmortyapi.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    private fun goBack(){
+        binding.ivBack.setOnClickListener {
+            onBackPressed()
+        }
     }
 }
